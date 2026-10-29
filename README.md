@@ -30,3 +30,7 @@ app = RateLimitMiddleware(your_wsgi_app, capacity=10, refill_rate=1.0)
 - **SQLite over In-Memory:** While in-memory is faster, SQLite allows the rate limit state to persist across process restarts and provides a centralized state if multiple workers are running (when using WAL mode).
 - **BEGIN IMMEDIATE:** We explicitly acquire a write lock before reading the token count to prevent TOCTOU (Time-of-Check to Time-of-Use) race conditions where multiple threads read the same token count simultaneously.
 - **Token Bucket vs Fixed Window:** The Token Bucket avoids the "thundering herd" problem of fixed-window limiters (where a user can burst 2x the limit at the window boundary).
+
+- ## Security Posture (CSP)
+The middleware is designed to be CSP-compliant. It does not inject inline scripts or styles into the response. The security headers are enforced upstream by the WSGI server, typically implementing:
+`script-src 'self'; style-src 'self'; object-src 'none'; frame-ancestors 'none';`
