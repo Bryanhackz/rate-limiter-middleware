@@ -8,7 +8,7 @@ def serve_static(path: str) -> tuple[str, str, bytes] | None:
     safe_path = unquote(path).lstrip("/")
     full_path = (FRONTEND_DIR / safe_path).resolve()
 
-    if not str(full_path).startswith(str(FRONTEND_DIR)):
+    if not full_path.is_relative_to(FRONTEND_DIR):
         return None
 
     if full_path.is_file():
